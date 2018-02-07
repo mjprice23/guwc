@@ -14,7 +14,7 @@
 ## To Follow Along
 * `git checkout start`
 
-## Getting Started (chkpt1)
+## Getting Started
 * Your working directory should look like:
   ```
   LICENSE		hogwarts/
@@ -29,7 +29,7 @@
   'students',
   ```
 
-## Making our Students App (chkpt2)
+## Making our Students App (chkpt1)
 * We will now work in the `students/` directory
 
 ### Models
