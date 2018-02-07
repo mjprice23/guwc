@@ -104,3 +104,6 @@ class Student(TimeStampedUUIDModel):
     database we would like
 * Once this is done, our models are ready to roll.  Next, we tackle the
 admin interface, an easy way to mess with our backend.
+
+### Admin Interface (chkpt3)
+
