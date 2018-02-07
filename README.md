@@ -12,5 +12,19 @@
 * `./manage.py runserver`
 
 ## To Follow Along
-* Once you've installed the project, type:
 * `git checkout start`
+
+## Getting Started
+* Your working directory should look like:
+  ```
+  LICENSE		hogwarts/
+  README.md		requirements.txt
+  ```
+* `cd hogwarts`
+* `./manage.py startapp students`
+* Open the `hogwarts/` directory in your favorite IDE
+* In `hogwarts/settings.py`, add the following to `INSTALLED_APPS`:
+  ```
+  'django-extensions',
+  'students',
+  ```
