@@ -14,7 +14,7 @@
 ## To Follow Along
 * `git checkout start`
 
-## Getting Started (chkpt1)
+## Getting Started
 * Your working directory should look like:
   ```
   LICENSE		hogwarts/
@@ -104,3 +104,56 @@ class Student(TimeStampedUUIDModel):
     database we would like
 * Once this is done, our models are ready to roll.  Next, we tackle the
 admin interface, an easy way to mess with our backend.
+
+### Admin Interface (chkpt2)
+* Django provides a really nice built-in admin interface to interact
+with our data models.  It is easy to implement, and usable in production
+code.
+* In our `admin.py` file, let's put the following code:
+```python
+from django.contrib import admin
+from .models import Student
+
+class StudentAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Student, StudentAdmin)
+```
+
+* There is a LOT of automagic going on here, but essentially what we
+are doing is allowing admin users to see, edit, add, and delete any
+records of the Student model that exist in our database.
+* Our only problem is that we don't currently have an admin user.
+To remedy this, let's type: `./manage.py createsuperuser` and fill in
+the information it asks you for.
+* Let's take a look at the admin interface. Type in
+`./manage.py runserver` and in your web browser, navigate to
+`127.0.0.1:8000/admin`. Type in the credentials of the admin user
+you just created.
+* When you've logged in, you should see something like this:
+
+    ![admin_interface]
+* Click on `Students` and then click `Add Student` in the top right
+corner of the whitespace.  We should then see an interface to add a
+student, like this:
+
+    ![add_student]
+
+* Let's add a student for each house.  After you've added them, the
+student list should look similar to this:
+
+    ![student_list]
+
+* We can delete or edit any of these students, if we so choose, by
+clicking on their name in the list above.
+
+* This admin interface is not the prettiest by any means, but it is
+indeed functional, and is perfectly acceptable for use in production.
+
+* We will now move on to the middleware, creating a view, and a form for
+editing and adding students.
+
+[admin_interface]: images/admin_interface.png
+[add_student]: images/add_student.png
+[student_list]: images/student_list.png
+
