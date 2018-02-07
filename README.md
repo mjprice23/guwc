@@ -24,7 +24,7 @@
 * `./manage.py startapp students`
 * Open the `hogwarts/` directory in your favorite IDE
 * In `hogwarts/settings.py`, add the following to `INSTALLED_APPS`:
-  ```
+  ```python
   'django-extensions',
   'students',
   ```
