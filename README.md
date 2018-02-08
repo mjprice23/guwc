@@ -157,3 +157,179 @@ editing and adding students.
 [add_student]: images/add_student.png
 [student_list]: images/student_list.png
 
+### Creating Views from our Model (chkpt3)
+Obviously, not everyone should have admin powers on our site, and we
+want others to be able to come and register students.  To do that, we
+need to create views to prepare and serve web pages.
+
+* We want to display the list of students who go to Hogwarts, as well
+as see specific student details.  Finally, we want to be able to add
+students to our list.  For this, we will use three separate views, a
+list view, a detail view where we can view and edit student information,
+and a view for adding students.
+
+* First, we will create a list view.  In `views.py`:
+```python
+from django.views.generic.list import ListView
+from .models import Student
+
+
+class StudentListView(ListView):
+
+    model = Student
+
+```
+
+* There is a lot of automagic stuff going on here, but we still have
+to string this view to a URL.  Let's create a `urls.py` file in the
+`students/` directory.  In it, we will put the following:
+```python
+from django.urls import path
+from .views import StudentListView
+
+
+urlpatterns = [
+    path('', StudentListView.as_view(), name='student-list'),
+]
+```
+
+* This is *almost* enough.  Django does not automagically know that this
+URL configuration exists, so we must string it through to the URL file
+that is acknowledges, which is in the `hogwarts/` directory.  In
+`hogwarts/urls.py`, let's put:
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('students/', include('students.urls')),
+]
+```
+
+* This tells Django that whenever we see a URL that begins with
+`students/`, we should refer to the URLs defined in the students app.
+This is useful, because we can set up the students module to work on its
+own, and then plug it into any larger Django project, just by adding
+it to the settings.py and including its URL config in the main
+`urls.py`.  Nifty.
+
+* Another automagic part of the `ListView` that we used for our view is
+an implied html file.  Because we set `model = Student`, Django will
+search for an html file named `[model_name]_list.html`, in this case,
+`student_list.html`.  Specifically, it will search in
+`[app_name]/templates/[app_name]/` for that file.  Let's make that path
+for Django by typing into the command line:
+```
+mkdir templates
+cd templates
+mkdir students
+cd students
+touch student_list.html
+```
+
+* We now have the correct path with a blank html file.  Back in the IDE,
+ add the following to the `student_list.html` file:
+ ```html
+<ul>
+{% for student in object_list %}
+    <li>{{ student.first_name }} {{ student.last_name }}, {{ student.year }}, {{ student.get_house_display }}</li>
+{% endfor %}
+</ul>
+ ```
+
+* This code above is jinja2 template code.  The `object_list` is data
+that is automatically passed through the `ListView` to the template. It
+is accessible only through the template at the point at which the page
+loads.  We take advantage of this passed-through data to display our
+list of students.
+
+* Back in the main `hogwarts/` directory, let's run our server again.
+Enter `./manage.py runserver`, and in your web browser, navigate to
+`127.0.0.1:8000/students/`.  You should see a list of the Hogwarts
+students that we created in our admin interface.
+
+* We would like to be able to edit the information of each student, so
+let's now make a view for that. Thankfully, Django has us automagically
+covered. It has a built-in `UpdateView` and `CreateView` for just this
+occasion. Let's change our `views.py` to the following:
+```
+from django.views.generic.list import ListView
+from django.views.generic.edit import UpdateView, CreateView
+from django.urls import reverse_lazy
+from .models import Student
+
+
+class StudentListView(ListView):
+
+    model = Student
+
+
+class StudentDetailView(UpdateView):
+
+    model = Student
+    fields = '__all__'
+    template_name = 'students/student_form.html'
+    success_url = reverse_lazy('student-list')
+
+
+class StudentAddView(CreateView):
+
+    model = Student
+    fields = '__all__'
+    template_name = 'students/student_form.html'
+    success_url = reverse_lazy('student-list')
+```
+
+* Notice two things here:
+    * `template_name` is the same in both views.  This is because the
+    actual form underlying the two views is the same, so we only need
+    to make one html template.
+    * `success_url` redirects to the `reverse_lazy('student-list')`.
+    What's happening here is actually simple.  `reverse` means we are
+    asking Django to reverse-engineer what URL to redirect to based on
+    the name we gave it. In this case, we are asking it to redirect to
+    the student list view.  The `lazy` tacked on to the function simply
+    waits to calculate the exact URL until it is needed.
+
+* We need to string these views to URLs, so we need to edit our
+`students/urls.py` to add URLs for them:
+```
+from django.urls import path
+from .views import StudentListView, StudentDetailView, StudentAddView
+
+
+urlpatterns = [
+    path('', StudentListView.as_view(), name='student-list'),
+    path('add/', StudentAddView.as_view(), name='student-add'),
+    path('<uuid:pk>/', StudentDetailView.as_view(), name='student-detail'),
+]
+```
+
+* The last path in the `urlpatterns` is a catch-all for UUIDs, which we
+use as IDs for all of our students.  If we know that UUID for a student,
+we can connect directly to the editor.  It would be unkind for us to
+force people to remember the UUID of any student that they want to
+look up, so we will edit the `student_list.html` to add links to
+each student's editing form:
+```
+<ul>
+{% for student in object_list %}
+    <li><a href="{{ student.id }}/">{{ student.first_name }} {{ student.last_name }}</a>, {{ student.year }}, {{ student.get_house_display }}</li>
+{% endfor %}
+</ul>
+```
+
+* Finally, we need to create `student_form.html` in the same
+directory as `student_list.html`, and add the following code to
+make it work:
+```
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+</form>
+```
+
+* Because Django automagically creates the form for us, we just
+need to call it in the html template.
