@@ -157,7 +157,7 @@ editing and adding students.
 [add_student]: images/add_student.png
 [student_list]: images/student_list.png
 
-### Creating Views from our Model (chkpt3)
+### Creating Views and Connecting them with URLs (chkpt3)
 Obviously, not everyone should have admin powers on our site, and we
 want others to be able to come and register students.  To do that, we
 need to create views to prepare and serve web pages.
