@@ -1,0 +1,34 @@
+label {
+    text-decoration: underline;
+    display:block;
+    position:relative;
+    padding-left: 120px;
+}
+
+input, select {
+    color: white;
+    border: none;
+    background: none;
+    margin-left: 120px;
+}
+
+form {
+    padding-left:600px;
+}
+
+input:focus, select:focus {
+    outline: none;
+}
+
+#id_year {
+    width: 50px;
+}
+
+input[type='submit'] {
+    margin-top: 20px;
+    display:block;
+    position: relative;
+    border-color: white;
+    border-style: solid;
+    border-radius: 5px;
+}

@@ -1,0 +1,31 @@
+<html>
+<head>
+    {% load staticfiles %}
+    {% load bootstrap3 %}
+    <title>{% block title %}Hogwarts{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'students/css/base.css' %}"/>
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery=1 %}
+    {% block stylesheets %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="plate">
+      <div class="container nav-container">
+          <ul class="nav navbar-nav">
+            <li><a href="/students/" class='tab'><span class='tab'>Home</span></a></li>
+            <!-- <li><a href="/resume/" class='tab'>Resume</a></li> -->
+          </ul>
+          <ul class="nav navbar-nav navbar-right big">
+            <li><a href="/students/add/" class='tab'><img class='logo' src='{% static "students/images/circle-with-plus.svg" %}' alt='Add'/></a></li>
+          </ul>
+
+      </div><!-- /.container-fluid -->
+      </div><!-- .plate -->
+    </nav>
+
+    <div class="container top">{% block content %}{% endblock %}</div>
+</body>
+
+</html>
