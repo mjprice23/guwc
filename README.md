@@ -333,3 +333,14 @@ make it work:
 
 * Because Django automagically creates the form for us, we just
 need to call it in the html template.
+
+* The site is now fully functional!  We can add new students, edit the
+current students, and see our progress.  In the admin interface, we can
+do all of that, and delete users.  There are many different directions
+that we can go from here, like adding users as a layer of security so
+that you need to log in if you want to add students. We could also
+ add a sorting hat function so that if you create a first year,
+ they will automatically be sorted into a house instead of giving you
+the option of choosing the house.  The last thing that we will do
+is attempt to make our website look nice, by adding some CSS and
+structure.
