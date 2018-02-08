@@ -344,3 +344,38 @@ that you need to log in if you want to add students. We could also
 the option of choosing the house.  The last thing that we will do
 is attempt to make our website look nice, by adding some CSS and
 structure.
+
+### Making it look nice(ish) (chkpt4)
+* Django makes it easy to add static content, in much the same way that
+we added templates in prior sections. In our `students` directory, we
+add a `static/students/` directory, and then add all of our static files
+like CSS and images to that. In our html templates, we can use the
+command `{% load staticfiles %}` to get access to our static files.
+We can import them like this:
+`<link rel="stylesheet" type="text/css" href="{% static 'students/css/base.css' %}"/>`
+
+* We can reference images directly in our CSS files:
+`background-image: url('../images/background.jpg');`
+
+* We wanted bootstrap, and there is actually a Django package for
+easy inclusion in your templates.  It is already installed in the
+requirements, and we can add it to our `INSTALLED_APPS` in the
+settings: `'bootstrap3',`.  In our templates, we import it like this:
+```jinja2
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery=1 %}
+```
+
+* The full guide on jinja2 is slightly out of the scope of this lesson,
+but it is a pretty powerful, easy to learn templating framework. If you
+plan on using Django, I would highly recommend learning it.
+
+This is a very simple example of a Django application. Django supports
+much more complicated models, operations, and applications. It also
+supports one of the most robust API frameworks,
+Django REST Framework (DRF). One thing that we did not touch during
+this lesson is `tests`. Any time that you write production code in Django,
+it is worthless unless it has good test coverage. Django makes tests
+easy to implement, and there are many add-ons for creating succint,
+replicable tests in Django.
