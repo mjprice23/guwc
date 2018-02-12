@@ -158,12 +158,12 @@ you just created.
 corner of the whitespace.  We should then see an interface to add a
 baby, like this:
 
-    ![add_student]
+    ![add_baby]
 
 * Let's add a couple of babies.  After you've added them, the
 baby list should look similar to this:
 
-    ![student_list]
+    ![baby_list]
 
 * We can delete or edit any of these babies, if we so choose, by
 clicking on their name in the list above.
@@ -175,6 +175,6 @@ indeed functional, and is perfectly acceptable for use in production.
 editing and adding babies.
 
 [admin_interface]: images/admin_interface.png
-[add_student]: images/add_student.png
-[student_list]: images/student_list.png
+[add_baby]: images/add_baby.png
+[baby_list]: images/baby_list.png
 
