@@ -1,0 +1,21 @@
+{% extends 'students/base.html' %}
+
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'students/css/list.css' %}"/>
+{% endblock %}
+
+{% block content %}
+<!--<ul>-->
+<!--{% for student in object_list %}-->
+    <!--<li class="student"><a href="{{ student.id }}/">{{ student.first_name }} {{ student.last_name }}</a>, {{ student.birth_year }}, {{ student.get_dad_house_display }},  {{ student.get_mom_house_display }}</li>-->
+<!--{% endfor %}-->
+<!--</ul>-->
+<table class="babies">
+    <tr><th>Name</th><th>Birth Year</th><th>Father's House</th><th>Mother's House</th></tr>
+    {% for student in object_list %}
+    <tr><td class="student"><a href="{{ student.id }}/">{{ student.first_name }} {{ student.last_name }}</a></td> <td>{{ student.birth_year }}</td> <td>{{ student.get_dad_house_display }}</td>  <td>{{ student.get_mom_house_display }}</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,4 +1,9 @@
-li.student {
-    padding-left:600px;
-    list-style: none;
+table.babies {
+    position: relative;
+    left: 600px;
+    color: white;
+}
+
+td, th {
+    padding: 5px;
 }

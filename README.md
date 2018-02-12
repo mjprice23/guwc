@@ -72,40 +72,47 @@ class TimeStampedUUIDModel(TimeStampedModel, UUIDModel):
         abstract = True
 ```
 
-* We then create our Student model to keep track of name, house, and year:
+* We then create our MagicalBaby model to keep track of name, parents' houses, and birth year:
 
 ```python
-class Student(TimeStampedUUIDModel):
+class MagicalBaby(TimeStampedUUIDModel):
     GRYFFINDOR = 'GR'
     SLYTHERIN = 'SL'
     RAVENCLAW = 'RA'
     HUFFLEPUFF = 'HU'
+    NONE = 'NO'
     HOUSE_CHOICES = (
         (GRYFFINDOR, 'Gryffindor'),
         (SLYTHERIN, 'Slytherin'),
         (RAVENCLAW, 'Ravenclaw'),
         (HUFFLEPUFF, 'Hufflepuff'),
+        (NONE, 'None'),
     )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    house = models.CharField(
+    dad_house = models.CharField(
         max_length=2,
         choices=HOUSE_CHOICES,
-        default=HUFFLEPUFF,
+        default=NONE,
     )
-    year = models.IntegerField(
-        default=1,
+    mom_house = models.CharField(
+        max_length=2,
+        choices=HOUSE_CHOICES,
+        default=NONE,
+    )
+    birth_year = models.IntegerField(
+        default=1997,
         validators=[
-            MaxValueValidator(7),
-            MinValueValidator(1),
+            MaxValueValidator(2018),
+            MinValueValidator(1900),
         ]
     )
 
     class Meta:
-        ordering = ['house', 'last_name', 'first_name']
+        ordering = ['birth_year', 'last_name', 'first_name', 'dad_house', 'mom_house']
 
     def __str__(self):
-        return '{} {}'.format(self.first_name, self.last_name, self.house, self.year)
+        return '{} {}'.format(self.first_name, self.last_name, self.birth_year, self.dad_house, self.mom_house)
 ```
 
 * Back in the `hogwarts/` directory, on the command line, we will type:
@@ -125,12 +132,13 @@ code.
 * In our `admin.py` file, let's put the following code:
 ```python
 from django.contrib import admin
-from .models import Student
+from .models import MagicalBaby
 
-class StudentAdmin(admin.ModelAdmin):
+
+class MagicalBabyAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(Student, StudentAdmin)
+admin.site.register(MagicalBaby, MagicalBabyAdmin)
 ```
 
 * There is a LOT of automagic going on here, but essentially what we
@@ -146,29 +154,29 @@ you just created.
 * When you've logged in, you should see something like this:
 
     ![admin_interface]
-* Click on `Students` and then click `Add Student` in the top right
+* Click on `Magical babys` and then click `Add Magical Baby` in the top right
 corner of the whitespace.  We should then see an interface to add a
-student, like this:
+baby, like this:
 
-    ![add_student]
+    ![add_baby]
 
-* Let's add a student for each house.  After you've added them, the
-student list should look similar to this:
+* Let's add a couple of babies.  After you've added them, the
+baby list should look similar to this:
 
-    ![student_list]
+    ![baby_list]
 
-* We can delete or edit any of these students, if we so choose, by
+* We can delete or edit any of these babies, if we so choose, by
 clicking on their name in the list above.
 
 * This admin interface is not the prettiest by any means, but it is
 indeed functional, and is perfectly acceptable for use in production.
 
 * We will now move on to the middleware, creating a view, and a form for
-editing and adding students.
+editing and adding babies.
 
 [admin_interface]: images/admin_interface.png
-[add_student]: images/add_student.png
-[student_list]: images/student_list.png
+[add_baby]: images/add_baby.png
+[baby_list]: images/baby_list.png
 
 ### Creating Views and Connecting them with URLs (chkpt3)
 Obviously, not everyone should have admin powers on our site, and we
@@ -184,12 +192,12 @@ and a view for adding students.
 * First, we will create a list view.  In `views.py`:
 ```python
 from django.views.generic.list import ListView
-from .models import Student
+from .models import MagicalBaby
 
 
-class StudentListView(ListView):
+class BabyListView(ListView):
 
-    model = Student
+    model = MagicalBaby
 
 ```
 
@@ -198,11 +206,11 @@ to string this view to a URL.  Let's create a `urls.py` file in the
 `students/` directory.  In it, we will put the following:
 ```python
 from django.urls import path
-from .views import StudentListView
+from .views import BabyListView
 
 
 urlpatterns = [
-    path('', StudentListView.as_view(), name='student-list'),
+    path('', BabyListView.as_view(), name='baby-list'),
 ]
 ```
 
@@ -228,9 +236,9 @@ it to the settings.py and including its URL config in the main
 `urls.py`.  Nifty.
 
 * Another automagic part of the `ListView` that we used for our view is
-an implied html file.  Because we set `model = Student`, Django will
+an implied html file.  Because we set `model = MagicalBaby`, Django will
 search for an html file named `[model_name]_list.html`, in this case,
-`student_list.html`.  Specifically, it will search in
+`magicalbaby_list.html`.  Specifically, it will search in
 `[app_name]/templates/[app_name]/` for that file.  Let's make that path
 for Django by typing into the command line:
 ```
@@ -238,15 +246,15 @@ mkdir templates
 cd templates
 mkdir students
 cd students
-touch student_list.html
+touch magicalbaby_list.html
 ```
 
 * We now have the correct path with a blank html file.  Back in the IDE,
- add the following to the `student_list.html` file:
+ add the following to the `magicalbaby_list.html` file:
  ```html
 <ul>
-{% for student in object_list %}
-    <li>{{ student.first_name }} {{ student.last_name }}, {{ student.year }}, {{ student.get_house_display }}</li>
+{% for baby in object_list %}
+    <li>{{ baby.first_name }} {{ baby.last_name }}, {{ baby.birth_year }}, {{ baby.get_dad_house_display }}, {{ baby.get_mom_house_display }}</li>
 {% endfor %}
 </ul>
  ```
@@ -266,39 +274,39 @@ students that we created in our admin interface.
 let's now make a view for that. Thankfully, Django has us automagically
 covered. It has a built-in `UpdateView` and `CreateView` for just this
 occasion. Let's change our `views.py` to the following:
-```
+```python
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView, CreateView
 from django.urls import reverse_lazy
-from .models import Student
+from .models import MagicalBaby
 
 
-class StudentListView(ListView):
+class BabyListView(ListView):
 
-    model = Student
+    model = MagicalBaby
 
 
-class StudentDetailView(UpdateView):
+class BabyDetailView(UpdateView):
 
-    model = Student
+    model = MagicalBaby
     fields = '__all__'
-    template_name = 'students/student_form.html'
-    success_url = reverse_lazy('student-list')
+    template_name = 'students/baby_form.html'
+    success_url = reverse_lazy('baby-list')
 
 
-class StudentAddView(CreateView):
+class BabyAddView(CreateView):
 
-    model = Student
+    model = MagicalBaby
     fields = '__all__'
-    template_name = 'students/student_form.html'
-    success_url = reverse_lazy('student-list')
+    template_name = 'students/baby_form.html'
+    success_url = reverse_lazy('baby-list')
 ```
 
 * Notice two things here:
     * `template_name` is the same in both views.  This is because the
     actual form underlying the two views is the same, so we only need
     to make one html template.
-    * `success_url` redirects to the `reverse_lazy('student-list')`.
+    * `success_url` redirects to the `reverse_lazy('baby-list')`.
     What's happening here is actually simple.  `reverse` means we are
     asking Django to reverse-engineer what URL to redirect to based on
     the name we gave it. In this case, we are asking it to redirect to
@@ -307,15 +315,15 @@ class StudentAddView(CreateView):
 
 * We need to string these views to URLs, so we need to edit our
 `students/urls.py` to add URLs for them:
-```
+```python
 from django.urls import path
-from .views import StudentListView, StudentDetailView, StudentAddView
+from .views import BabyListView, BabyDetailView, BabyAddView
 
 
 urlpatterns = [
-    path('', StudentListView.as_view(), name='student-list'),
-    path('add/', StudentAddView.as_view(), name='student-add'),
-    path('<uuid:pk>/', StudentDetailView.as_view(), name='student-detail'),
+    path('', BabyListView.as_view(), name='baby-list'),
+    path('add/', BabyAddView.as_view(), name='baby-add'),
+    path('<uuid:pk>/', BabyDetailView.as_view(), name='baby-detail'),
 ]
 ```
 
@@ -323,18 +331,18 @@ urlpatterns = [
 use as IDs for all of our students.  If we know that UUID for a student,
 we can connect directly to the editor.  It would be unkind for us to
 force people to remember the UUID of any student that they want to
-look up, so we will edit the `student_list.html` to add links to
+look up, so we will edit the `magicalbaby_list.html` to add links to
 each student's editing form:
 ```
 <ul>
-{% for student in object_list %}
-    <li><a href="{{ student.id }}/">{{ student.first_name }} {{ student.last_name }}</a>, {{ student.year }}, {{ student.get_house_display }}</li>
+{% for baby in object_list %}
+    <li><a href="{{ baby.id }}/">{{ baby.first_name }} {{ baby.last_name }}</a>, {{ baby.birth_year }}, {{ baby.get_dad_house_display }}, {{ baby.get_mom_house_display }}</li>
 {% endfor %}
 </ul>
 ```
 
-* Finally, we need to create `student_form.html` in the same
-directory as `student_list.html`, and add the following code to
+* Finally, we need to create `magicalbaby_form.html` in the same
+directory as `magicalbaby_list.html`, and add the following code to
 make it work:
 ```
 <form action="" method="post">
@@ -358,7 +366,7 @@ the option of choosing the house.  The last thing that we will do
 is attempt to make our website look nice, by adding some CSS and
 structure.
 
-### Making it look nice(ish) (chkpt4)
+### Making it look nice(ish) (chkpt4.1)
 * Django makes it easy to add static content, in much the same way that
 we added templates in prior sections. In our `students` directory, we
 add a `static/students/` directory, and then add all of our static files
