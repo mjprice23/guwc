@@ -154,25 +154,25 @@ you just created.
 * When you've logged in, you should see something like this:
 
     ![admin_interface]
-* Click on `Magical babys` and then click `Add Student` in the top right
+* Click on `Magical babys` and then click `Add Magical Baby` in the top right
 corner of the whitespace.  We should then see an interface to add a
-student, like this:
+baby, like this:
 
     ![add_student]
 
-* Let's add a student for each house.  After you've added them, the
-student list should look similar to this:
+* Let's add a couple of babies.  After you've added them, the
+baby list should look similar to this:
 
     ![student_list]
 
-* We can delete or edit any of these students, if we so choose, by
+* We can delete or edit any of these babies, if we so choose, by
 clicking on their name in the list above.
 
 * This admin interface is not the prettiest by any means, but it is
 indeed functional, and is perfectly acceptable for use in production.
 
 * We will now move on to the middleware, creating a view, and a form for
-editing and adding students.
+editing and adding babies.
 
 [admin_interface]: images/admin_interface.png
 [add_student]: images/add_student.png
