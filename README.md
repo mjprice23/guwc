@@ -132,12 +132,13 @@ code.
 * In our `admin.py` file, let's put the following code:
 ```python
 from django.contrib import admin
-from .models import Student
+from .models import MagicalBaby
 
-class StudentAdmin(admin.ModelAdmin):
+
+class MagicalBabyAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(Student, StudentAdmin)
+admin.site.register(MagicalBaby, MagicalBabyAdmin)
 ```
 
 * There is a LOT of automagic going on here, but essentially what we
@@ -153,7 +154,7 @@ you just created.
 * When you've logged in, you should see something like this:
 
     ![admin_interface]
-* Click on `Students` and then click `Add Student` in the top right
+* Click on `Magical babys` and then click `Add Student` in the top right
 corner of the whitespace.  We should then see an interface to add a
 student, like this:
 

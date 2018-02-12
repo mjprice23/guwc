@@ -58,7 +58,7 @@ class MagicalBaby(TimeStampedUUIDModel):
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name, self.birth_year, self.dad_house, self.mom_house)
-    
+
 
 class Student(TimeStampedUUIDModel):
     GRYFFINDOR = 'GR'
