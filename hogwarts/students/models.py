@@ -20,6 +20,46 @@ class TimeStampedUUIDModel(TimeStampedModel, UUIDModel):
         abstract = True
 
 
+class MagicalBaby(TimeStampedUUIDModel):
+    GRYFFINDOR = 'GR'
+    SLYTHERIN = 'SL'
+    RAVENCLAW = 'RA'
+    HUFFLEPUFF = 'HU'
+    NONE = 'NO'
+    HOUSE_CHOICES = (
+        (GRYFFINDOR, 'Gryffindor'),
+        (SLYTHERIN, 'Slytherin'),
+        (RAVENCLAW, 'Ravenclaw'),
+        (HUFFLEPUFF, 'Hufflepuff'),
+        (NONE, 'None'),
+    )
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    dad_house = models.CharField(
+        max_length=2,
+        choices=HOUSE_CHOICES,
+        default=NONE,
+    )
+    mom_house = models.CharField(
+        max_length=2,
+        choices=HOUSE_CHOICES,
+        default=NONE,
+    )
+    birth_year = models.IntegerField(
+        default=1,
+        validators=[
+            MaxValueValidator(2018),
+            MinValueValidator(1900),
+        ]
+    )
+
+    class Meta:
+        ordering = ['birth_year', 'last_name', 'first_name', 'dad_house', 'mom_house']
+
+    def __str__(self):
+        return '{} {}'.format(self.first_name, self.last_name, self.birth_year, self.dad_house, self.mom_house)
+
+
 class Student(TimeStampedUUIDModel):
     GRYFFINDOR = 'GR'
     SLYTHERIN = 'SL'
