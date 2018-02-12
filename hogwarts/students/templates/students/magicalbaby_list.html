@@ -1,0 +1,5 @@
+<ul>
+{% for baby in object_list %}
+    <li><a href="{{ baby.id }}/">{{ baby.first_name }} {{ baby.last_name }}</a>, {{ baby.birth_year }}, {{ baby.get_dad_house_display }}, {{ baby.get_mom_house_display }}</li>
+{% endfor %}
+</ul>
