@@ -1,5 +1,15 @@
+{% extends 'students/base.html' %}
+
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'students/css/list.css' %}"/>
+{% endblock %}
+
+{% block content %}
 <ul>
-{% for baby in object_list %}
-    <li><a href="{{ baby.id }}/">{{ baby.first_name }} {{ baby.last_name }}</a>, {{ baby.birth_year }}, {{ baby.get_dad_house_display }}, {{ baby.get_mom_house_display }}</li>
+{% for student in object_list %}
+    <li class="student"><a href="{{ student.id }}/">{{ student.first_name }} {{ student.last_name }}</a>, {{ student.year }}, {{ student.get_house_display }}</li>
 {% endfor %}
 </ul>
+{% endblock %}

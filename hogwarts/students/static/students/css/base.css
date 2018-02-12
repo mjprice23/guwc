@@ -1,0 +1,40 @@
+body {
+    background-image: url('../images/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.top {
+    margin-top:220px;
+}
+
+.container {
+    color: white;
+    font-size: 20px;
+}
+
+.container a {
+    color: white;
+    font-size: 20px;
+}
+
+.container a:hover {
+    color: white;
+}
+
+div.plate, nav, .navbar, .navbar-default{
+    background-color: rgba(1,1,1,0) !important;
+    border: none !important;
+}
+
+img.logo {
+	height: 40px;
+}
+
+li span {
+    color: white;
+}
+
+nav li {
+    margin-top: 20px;
+}
