@@ -101,7 +101,7 @@ class MagicalBaby(TimeStampedUUIDModel):
         default=NONE,
     )
     birth_year = models.IntegerField(
-        default=1,
+        default=1997,
         validators=[
             MaxValueValidator(2018),
             MinValueValidator(1900),
