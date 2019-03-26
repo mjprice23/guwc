@@ -22,7 +22,7 @@ houses while they were at Hogwarts.
 * `pip install -r requirements.txt`
 
 ## Running This Project
-* `./manage.py runserver`
+* `python manage.py runserver`
 
 ## To Follow Along
 * `git checkout start`
